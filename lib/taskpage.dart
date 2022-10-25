@@ -7,7 +7,8 @@ import 'package:todolist/widget.dart';
 
 // ignore: camel_case_types
 class taskpage extends StatefulWidget {
-  const taskpage({super.key});
+  final Task? task;
+  taskpage({@required this.task});
 
   @override
   State<taskpage> createState() => _taskpageState();
@@ -15,6 +16,17 @@ class taskpage extends StatefulWidget {
 
 // ignore: camel_case_types
 class _taskpageState extends State<taskpage> {
+  String _tasktitle = "";
+
+  @override
+  void initState() {
+    if (widget.task != null) {
+      _tasktitle = widget.task!.title!;
+    } else {}
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,12 +60,20 @@ class _taskpageState extends State<taskpage> {
                         Expanded(
                           child: TextField(
                             onSubmitted: (value) async {
+                              // check if the field is not empty
                               if (value != "") {
-                                DatabaseHelper _dbHelper = DatabaseHelper();
-                                Task _newTask = Task(title: value);
-                                await _dbHelper.insertTask(_newTask);
+                                // check if the task is not null
+                                if (widget.task == null) {
+                                  DatabaseHelper _dbHelper = DatabaseHelper();
+                                  Task _newTask = Task(title: value);
+                                  await _dbHelper.insertTask(_newTask);
+                                } else {
+                                  print("Update the existing task");
+                                }
                               }
                             },
+                            controller: TextEditingController()
+                              ..text = _tasktitle,
                             decoration: InputDecoration(
                                 hintText: "Enter Task Title",
                                 border: InputBorder.none),
