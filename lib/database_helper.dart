@@ -47,4 +47,20 @@ class DatabaseHelper {
       }),
     );
   }
+
+  Future<List<Todo>> getTodo(int taskId) async {
+    Database _db = await database();
+    List<Map<String, dynamic>> todoMap =
+        await _db.rawQuery("SELECT * FROM todo WHERE taskId = $taskId");
+    return List.generate(
+      todoMap.length,
+      ((index) {
+        return Todo(
+            id: todoMap[index]['id'],
+            title: todoMap[index]['title'],
+            taskId: todoMap[index]['taskId'],
+            isDone: todoMap[index]['isDone']);
+      }),
+    );
+  }
 }
