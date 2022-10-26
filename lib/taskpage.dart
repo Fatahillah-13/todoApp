@@ -1,8 +1,9 @@
-// ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors, duplicate_ignore
+// ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors, duplicate_ignore, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
 import 'package:todolist/database_helper.dart';
 import 'package:todolist/models/task.dart';
+import 'package:todolist/models/todo.dart';
 import 'package:todolist/widget.dart';
 
 // ignore: camel_case_types
@@ -98,21 +99,59 @@ class _taskpageState extends State<taskpage> {
                               EdgeInsets.symmetric(horizontal: 24.0)),
                     ),
                   ),
-                  TodoWidget(
-                    text: "Create your first task",
-                    isDone: true,
-                  ),
-                  TodoWidget(
-                    text: "Create your first todo as well",
-                    isDone: true,
-                  ),
-                  TodoWidget(
-                    text: "Just another todo",
-                    isDone: false,
-                  ),
-                  TodoWidget(
-                    isDone: false,
-                  ),
+                  Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24.0,
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 24.0,
+                              height: 24.0,
+                              margin: EdgeInsets.only(right: 12.0),
+                              decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(6.0),
+                                border: Border.all(
+                                  color: Color(0xFF868290),
+                                  width: 1.5,
+                                ),
+                              ),
+                              child: Image(
+                                image:
+                                    AssetImage('assets/images/icon_check.png'),
+                              ),
+                            ),
+                            Expanded(
+                              child: TextField(
+                                onSubmitted: ((value) async {
+                                  // check if the field is not empty
+                                  if (value != "") {
+                                    // check if the task is not null
+                                    if (widget.task == null) {
+                                      DatabaseHelper _dbHelper =
+                                          DatabaseHelper();
+                                      Todo _newTodo = Todo(
+                                        title: value,
+                                        isDone: 0,
+                                        taskId: widget.task?.id,
+                                      );
+                                      await _dbHelper.insertTodo(_newTodo);
+                                    }
+                                  }
+                                }),
+                                decoration: InputDecoration(
+                                    hintText: "Enter todo item",
+                                    border: InputBorder.none),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               ),
               Positioned(
