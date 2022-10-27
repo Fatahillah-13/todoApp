@@ -54,10 +54,15 @@ class _HomepageState extends State<Homepage> {
                                         task: snapshot.data[index],
                                       ),
                                     ),
+                                  ).then(
+                                    (value) {
+                                      setState(() {});
+                                    },
                                   );
                                 },
                                 child: taskcardWidget(
                                   title: snapshot.data[index].title,
+                                  desc: snapshot.data[index].description,
                                 ),
                               );
                             },
